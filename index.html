@@ -750,6 +750,29 @@ setTab("tab-data");
 renderDataState();
 setProgress(0,"待載入資料");
 
+/* 開啟頁面時自動載入資料（命中 7 天快取則立即用快取，否則讀取 chunqiu-data.json） */
+(async function autoLoadData(){
+  const btnLoad=document.getElementById("loadDataBtn");
+  if(btnLoad){ btnLoad.disabled=true; btnLoad.textContent="載入中…"; }
+  const status=document.getElementById("dataStatus");
+  status.className="status info";
+  status.textContent="自動載入中…請稍候";
+  const r=await loadData(false);
+  if(btnLoad){ btnLoad.disabled=false;
+    btnLoad.textContent = r.from==='file' && !r.cached ? "載入資料" : "重新載入資料"; }
+  if(r.from==="error"){
+    status.className="status err";
+    status.textContent="載入失敗："+r.error+"。請確認 chunqiu-data.json 已放在 index.html 同一目錄，並透過 HTTP 伺服器（非 file://）開啟本頁。";
+  } else if(r.from==="cache"){
+    status.className="status ok";
+    status.textContent="資料已自動從本機快取載入（"+ALL_ENTRIES.length+" 條）。";
+  } else {
+    status.className="status ok";
+    status.textContent="資料已自動載入（"+ALL_ENTRIES.length+" 條"+(r.cached?"，已寫入快取":" (快取空間不足)")+"）。";
+  }
+  renderDataState();
+})();
+
 </script>
 </body>
 </html>
