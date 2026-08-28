@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="春秋三傳全文檢索——左傳、公羊傳、穀梁傳。資料來源：殆知閣古籍庫（公有領域）。">
+<title>春秋三傳檢索</title>
+<style>
+  :root{
+    --bg:#f7f2e7;        /* 淺米白 */
+    --panel:#ffffff;
+    --ink:#3b3730;       /* 深灰正文 */
+    --ink-soft:#6b665c;
+    --accent:#8a2f1d;    /* 暗紅 */
+    --accent-hi:#a63a24;
+    --line:#d9d0bf;
+    --chip:#efe7d6;
+    --hl:#f6d9a8;        /* 命中高亮 */
+    --ok:#3f6b3f;
+    --warn:#a05a1c;
+    --shadow:0 2px 8px rgba(60,50,30,.08);
+    --radius:10px;
+    --prog-track:#e2daca;
+    --serif:"FangSong","仿宋","STFangsong","FangSong_GB2312","Noto Serif CJK SC","Source Han Serif SC","SimSun","serif";
+    --sans:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+  }
+  html[data-theme="dark"]{
+    --bg:#1e1c18;
+    --panel:#26241f;
+    --ink:#e6e0d2;
+    --ink-soft:#b4ac9b;
+    --accent:#d26a4a;
+    --accent-hi:#e07a58;
+    --line:#3c3830;
+    --chip:#332f27;
+    --hl:#6b4d1e;
+    --ok:#9cc59c;
+    --warn:#e2a98a;
+    --shadow:0 2px 8px rgba(0,0,0,.4);
+    --prog-track:#3c3830;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;font-size:18px}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--serif);line-height:1.9;letter-spacing:.01em;
+  }
+  [hidden]{display:none !important}
+
+  .safe{max-width:1080px;margin:0 auto;padding:0 18px}
+
+  /* ── 頂欄 + 常駐進度條 ───────────────────────── */
+  header.top{
+    padding:20px 0 8px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+  .brand h1{margin:0;font-size:1.55rem;color:var(--accent);font-weight:700}
+  .brand .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+  .head-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+  /* 常駐進度條（粘在頂欄下方） */
+  .progbar-strip{
+    border-bottom:1px solid var(--line);background:var(--panel);
+  }
+  .progbar-inner{max-width:1080px;margin:0 auto;padding:8px 18px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .progbar-track{flex:1 1 220px;height:12px;background:var(--prog-track);border-radius:7px;overflow:hidden;min-width:120px}
+  .progbar-track>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-hi));
+    transition:width .25s ease;border-radius:7px}
+  .progbar-label{font-family:var(--serif);font-size:.8rem;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%}
+  .progbar-pct{font-family:var(--serif);font-size:.78rem;color:var(--ink-soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+  .btn{
+    appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    padding:7px 14px;border-radius:8px;font-family:var(--serif);font-size:.9rem;cursor:pointer;
+    transition:background .15s,border-color .15s;
+  }
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-hi)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn:focus-visible,.field:focus-visible,select:focus-visible{
+    outline:3px solid var(--accent-hi);outline-offset:2px;
+  }
+
+  nav.tabs{margin:14px 0 4px}
+  nav.tabs .inner{display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .tab{border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;
+    padding:9px 16px;background:transparent;color:var(--ink-soft);font-family:var(--serif);
+    font-size:.98rem;cursor:pointer}
+  .tab[aria-selected="true"]{color:var(--accent);border-color:var(--line);background:var(--panel);font-weight:700}
+  .tab:hover{color:var(--accent)}
+
+  main{margin:16px 0 60px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:18px 20px;margin-bottom:18px}
+  .panel h2{margin:0 0 6px;font-size:1.2rem;color:var(--ink)}
+  .panel ul{margin:.4em 0 1em;padding-left:1.3em}
+  .panel li{margin:.3em 0}
+
+  label.lbl{display:block;font-family:var(--serif);font-size:.85rem;color:var(--ink-soft);margin:0 0 6px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .field{width:auto;padding:9px 12px;font-family:var(--serif);font-size:1rem;
+    border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+  .grow{flex:1 1 260px;min-width:200px}
+  select.field{appearance:auto}
+  .hint{font-size:.82rem;color:var(--ink-soft);margin-top:6px}
+  code{font-family:Consolas,"Courier New",monospace;background:var(--chip);padding:1px 5px;border-radius:4px;font-size:.85em}
+
+  .status{font-family:var(--serif);font-size:.92rem;padding:10px 14px;border-radius:8px;margin:10px 0}
+  .status.info{background:var(--chip);color:var(--ink)}
+  .status.ok{background:#e4efe4;color:var(--ok)}
+  html[data-theme="dark"] .status.ok{background:#24331f}
+  .status.err{background:#f6e0db;color:var(--warn);border:1px solid #e2b6aa}
+  html[data-theme="dark"] .status.err{background:#3a241d}
+  .status a{color:inherit}
+
+  .meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:12px}
+  .meta-box{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+  .meta-box .k{font-family:var(--serif);font-size:.75rem;color:var(--ink-soft)}
+  .meta-box .v{font-size:1.02rem;font-weight:700}
+
+  .result{margin:14px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+  .result .head{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+  .pill{display:inline-block;font-family:var(--serif);font-size:.76rem;padding:1px 9px;border-radius:20px;background:var(--chip);color:var(--ink-soft)}
+  .pill.tag{background:var(--accent);color:#fff}
+  .pill.jing{background:#e7eef6;color:#2f5a8a}
+  .pill.zhuan{background:#f3e6d0;color:#8a5a1d}
+  .result .ctx{font-size:1rem;white-space:pre-wrap;word-break:break-word}
+  mark.m{background:var(--hl);color:inherit;padding:0 1px;border-radius:2px}
+  .nores{color:var(--ink-soft);font-family:var(--serif);font-size:.92rem;padding:8px 0}
+
+  .compare-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .col{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);min-width:0}
+  .col h3{margin:0 0 8px;font-size:1.02rem;color:var(--accent);font-weight:700;
+    border-bottom:1px dashed var(--line);padding-bottom:6px}
+  .col .body{font-size:.97rem;white-space:pre-wrap;word-break:break-word;max-height:62vh;overflow:auto;line-height:2}
+  .col .body.mark-zhuan>span.jtext{color:#6a4a22}
+  .col .body span.jtext{color:#2f5a8a}
+  .col .empty{color:var(--ink-soft);font-style:italic}
+  .col .sub{font-family:var(--serif);font-size:.72rem;color:var(--ink-soft);margin-top:6px}
+
+  .freq-bar{height:8px;background:var(--prog-track);border-radius:5px;overflow:hidden;margin:6px 0 10px}
+  .freq-bar>i{display:block;height:100%;background:var(--accent)}
+
+  /* ── 搜字柱狀圖 ───────────────────────────── */
+  .bar-chart{
+    display:flex;align-items:flex-end;gap:22px;justify-content:center;
+    height:200px;padding:26px 10px 6px;margin:14px 0 4px;
+    background:var(--bg);border:1px solid var(--line);border-radius:8px;position:relative;
+  }
+  .bar-col{flex:0 1 120px;display:flex;flex-direction:column;align-items:center;height:100%;min-width:64px}
+  .bar-col .val{font-family:var(--serif);font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:4px;font-variant-numeric:tabular-nums}
+  .bar-col .track{width:100%;max-width:72px;height:150px;background:var(--prog-track);border-radius:6px;position:relative;overflow:visible;display:flex;align-items:flex-end}
+  .bar-col .bar{width:100%;min-height:2px;border-radius:6px;position:relative;
+    background:linear-gradient(180deg,var(--bar-hi),var(--bar));box-shadow:var(--shadow)}
+  .bar-col .name{font-family:var(--serif);font-size:.85rem;color:var(--ink-soft);margin-top:6px;white-space:nowrap}
+  /* 三傳柱色 */
+  .bar-col.zuo .bar{--bar:#8a2f1d;--bar-hi:#c05238}
+  html[data-theme="dark"] .bar-col.zuo .bar{--bar:#b34a2e;--bar-hi:#d9805f}
+  .bar-col.gong .bar{--bar:#a8792a;--bar-hi:#d0a045}
+  html[data-theme="dark"] .bar-col.gong .bar{--bar:#c99a3a;--bar-hi:#e8c06a}
+  .bar-col.gu .bar{--bar:#3f6b3f;--bar-hi:#5d9657}
+  html[data-theme="dark"] .bar-col.gu .bar{--bar:#5c9a55;--bar-hi:#8fc080}
+  /* 座標網格線 */
+  .bar-chart::before,.bar-chart::after{
+    content:"";position:absolute;left:12px;right:12px;
+    border-top:1px dashed var(--line);pointer-events:none;
+  }
+  .bar-chart::before{top:38px}               /* 3/4 高度 */
+  .bar-chart::after{top:calc(38px + 75px)}   /* 1/2 高度 */
+
+
+  footer.site{border-top:1px solid var(--line);margin-top:20px;padding:18px 0 40px;
+    font-family:var(--serif);font-size:.78rem;color:var(--ink-soft);line-height:1.8}
+  footer.site h3{font-size:.85rem;color:var(--ink);margin:0 0 6px}
+
+  .skip{position:absolute;left:-9999px;top:0;background:var(--accent);color:#fff;
+    padding:8px 14px;z-index:99;border-radius:0 0 8px 0}
+  .skip:focus{left:0}
+
+  @media (max-width:820px){
+    .compare-cols{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">跳到主內容</a>
+
+<header class="top safe" role="banner">
+  <div class="brand">
+    <h1>春秋三傳檢索</h1>
+    <div class="sub">左傳 · 公羊傳 · 穀梁傳　·　資料來源：殆知閣古籍庫（公有領域）</div>
+  </div>
+  <div class="head-actions">
+    <button class="btn" id="themeBtn" type="button">切換深色模式</button>
+    <button class="btn" id="reloadBtn" type="button">重新載入資料</button>
+  </div>
+</header>
+
+<!-- 常駐進度條 -->
+<div class="progbar-strip" role="status" aria-live="polite">
+  <div class="progbar-inner">
+    <div class="progbar-track"><i id="progFill"></i></div>
+    <span class="progbar-label" id="progLabel">尚未載入資料</span>
+    <span class="progbar-pct" id="progPct">0%</span>
+  </div>
+</div>
+
+<nav class="tabs safe" aria-label="功能頁籤" id="tabs">
+  <div class="inner" role="tablist" aria-label="功能">
+    <button class="tab" role="tab" id="tab-data" aria-selected="true" aria-controls="pane-data">資料載入</button>
+    <button class="tab" role="tab" id="tab-search" aria-selected="false" aria-controls="pane-search">全文檢索</button>
+    <button class="tab" role="tab" id="tab-char" aria-selected="false" aria-controls="pane-char">搜字索引</button>
+    <button class="tab" role="tab" id="tab-compare" aria-selected="false" aria-controls="pane-compare">三傳對比</button>
+    <button class="tab" role="tab" id="tab-info" aria-selected="false" aria-controls="pane-info">資料說明</button>
+  </div>
+</nav>
+
+<main id="main" class="safe" role="main">
+  <!-- PANE: DATA 載入 -->
+  <section id="pane-data" role="tabpanel" aria-labelledby="tab-data">
+    <div class="panel">
+      <h2>資料載入</h2>
+      <p class="hint">載入預置的結構化資料檔 <code>chunqiu-data.json</code>（已自殆知閣原文解析並轉為繁體，含「傳 × 魯公 × 年次」）。<br>
+        資料載入後會在瀏覽器本地快取（7 天），可加快再次開啟的速度。</p>
+      <div class="row">
+        <button class="btn primary" id="loadDataBtn" type="button">載入資料</button>
+        <button class="btn" id="clearCacheBtn" type="button">清除本機快取</button>
+      </div>
+      <div class="status info" id="dataStatus">尚未載入。點「載入資料」讀取本機資料檔。</div>
+      <div class="meta-grid" id="dataMeta"></div>
+    </div>
+  </section>
+
+  <!-- PANE: SEARCH 全文檢索 -->
+  <section id="pane-search" role="tabpanel" aria-labelledby="tab-search" hidden>
+    <div class="panel">
+      <h2>全文檢索</h2>
+      <p class="hint">輸入<strong>連續語詞或整句</strong>，在三傳全部條目中檢索。支援常見簡體／異體字自動對應（見「資料說明」）。</p>
+      <form id="searchForm" autocomplete="off">
+        <div class="row">
+          <input class="field grow" id="q" type="text" placeholder="例：克段於鄢　或　元年春王正月　或一字" aria-label="檢索關鍵詞">
+          <button class="btn primary" type="submit">檢索</button>
+        </div>
+      </form>
+      <div class="status info" id="searchStatus">請先載入資料，再輸入關鍵詞檢索。</div>
+      <div id="searchResults"></div>
+    </div>
+  </section>
+
+  <!-- PANE: CHAR 搜字 -->
+  <section id="pane-char" role="tabpanel" aria-labelledby="tab-char" hidden>
+    <div class="panel">
+      <h2>搜字索引</h2>
+      <p class="hint">輸入<strong>一個漢字</strong>，統計三傳總頻次與各傳頻次，並顯示出現上下文（每傳最多 12 條）。</p>
+      <form id="charForm" autocomplete="off">
+        <div class="row">
+          <input class="field" id="chq" type="text" maxlength="3" placeholder="輸入一個字" aria-label="要統計的字">
+          <button class="btn primary" type="submit">統計</button>
+        </div>
+      </form>
+      <div class="status info" id="charStatus">請先載入資料，再輸入單字統計。</div>
+      <div id="charResults" hidden></div>
+    </div>
+  </section>
+
+  <!-- PANE: COMPARE 三傳對比 -->
+  <section id="pane-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+    <div class="panel">
+      <h2>三傳對比</h2>
+      <p class="hint">選擇<strong>魯公</strong>與<strong>年次</strong>，並排顯示三傳對應年度的全文。僅按〈魯公＋年次〉對齊，<strong>不宣稱逐句對應</strong>。某傳該年缺資料則留白提示。</p>
+      <div class="row" style="margin-bottom:14px">
+        <div>
+          <label class="lbl" for="cDuke">魯公</label>
+          <select class="field" id="cDuke" aria-label="選擇魯公"></select>
+        </div>
+        <div>
+          <label class="lbl" for="cYear">年次</label>
+          <select class="field" id="cYear" aria-label="選擇年次"></select>
+        </div>
+      </div>
+      <div class="compare-cols">
+        <div class="col"><h3>左傳</h3><div class="body" id="cmp-左傳"><span class="empty">—</span></div></div>
+        <div class="col"><h3>公羊傳</h3><div class="body" id="cmp-公羊傳"><span class="empty">—</span></div></div>
+        <div class="col"><h3>穀梁傳</h3><div class="body" id="cmp-穀梁傳"><span class="empty">—</span></div></div>
+      </div>
+      <p class="hint" id="cmpNote"></p>
+    </div>
+  </section>
+
+  <!-- PANE: INFO 說明 -->
+  <section id="pane-info" role="tabpanel" aria-labelledby="tab-info" hidden>
+    <div class="panel">
+      <h2>資料說明與來源</h2>
+      <ul>
+        <li>本文取自<strong>春秋三傳</strong>（左傳、公羊傳、穀梁傳）之交換文本，解析為「傳 × 魯公 × 年次」。</li>
+        <li>資料來源：<strong>殆知閣古籍庫（daizhigev20）</strong>，舊版（四庫全書／武英殿本系），<strong>公有領域（Public Domain）</strong>。</li>
+        <li>文本經自動<strong>簡體→繁體</strong>轉換（opencc），僅供學術輔助閱讀；正式學術引用前，應與可靠點校本（如中華書局點校本）核對。</li>
+        <li>個別傳在某些年份於原始文本中<strong>缺對應條目</strong>（例如公羊傳莊公十三年、穀梁傳隱公六年／莊公十九年／僖公三十年）——本工具如實保留空缺，不虛構補齊。</li>
+        <li>檢索對簡繁／異體字採<strong>常用字自動對應</strong>，屬輔助功能，非全面文字學映射。</li>
+        <li>所有檢索、統計、對比均在瀏覽器本地完成，不發送任何外部請求。</li>
+      </ul>
+      <h3>點校本建議</h3>
+      <p class="hint">楊伯峻《春秋左傳注》（中華書局）・《春秋公羊傳》與《春秋穀梁傳》可參中華書局《十三經注疏》整理本。</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site safe">
+  <h3>版權與引用說明</h3>
+  <p>古籍原作屬於公有領域（作者逝世逾百年）。文本整理自殆知閣古籍庫（公有領域）；本工具為個人學術輔助、非商業用途。<br>
+  正式學術引用前，應與可靠點校本（如中華書局點校本）核對。</p>
+</footer>
+
+<script>
+"use strict";
+/* 春秋三傳檢索 — 單檔前端（資料來源：殆知閣公有領域文本） */
+
+const DATA_URL = "chunqiu-data.json";
+const CACHE_VER = "cqs3-daizhige-v2";   // 換資料源版本號
+const TTL_MS = 7*24*60*60*1000;         // 7 天
+
+/* 三傳顯示名（與資料檔 chuan 鍵一致）與全名 */
+const CHUAN_TRA = ["左傳","公羊傳","穀梁傳"];
+const CHUAN_FULL = { "左傳":"春秋左氏傳", "公羊傳":"春秋公羊傳", "穀梁傳":"春秋穀梁傳" };
+/* 十二公（繁體） */
+const DUKES = ["隱公","桓公","莊公","閔公","僖公","文公","宣公","成公","襄公","昭公","定公","哀公"];
+
+/* 進度條控制器 */
+const progEl = document.getElementById("progFill");
+const progLabel = document.getElementById("progLabel");
+const progPct = document.getElementById("progPct");
+function setProgress(pct, label){
+  progEl.style.width = Math.max(0,Math.min(100,pct))+"%";
+  progPct.textContent = Math.round(pct)+"%";
+  if(label !== undefined) progLabel.textContent = label;
+}
+
+/* 極簡本地儲存 */
+const store = {
+  get(k){ try{ return localStorage.getItem(k);}catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); return true; }catch(e){ return false; } },
+  del(k){ try{ localStorage.removeItem(k);}catch(e){} },
+};
+
+/* ---------- 簡繁／異體字對應（用於檢索時從輸入生成候選；文本已是繁體） ---------- */
+const S2T_MAP = {
+  "仓":"倉","国":"國","门":"門","关":"關","开":"開","与":"與","万":"萬","书":"書","对":"對",
+  "学":"學","归":"歸","师":"師","将":"將","许":"許","诸":"諸","国":"國","乱":"亂","华":"華",
+  "释":"釋","叶":"葉","观":"觀","让":"讓","礼":"禮","于":"於","饮":"飲","从":"從","还":"還",
+  "阴":"陰","陈":"陳","陆":"陸","风":"風","马":"馬","闻":"聞","问":"問","闭":"閉","阳":"陽",
+  "众":"眾","赋":"賦","宾":"賓","济":"濟","狱":"獄","乡":"鄉","鲁":"魯","齐":"齊","点":"點",
+  "龙":"龍","齿":"齒","宝":"寶","实":"實","宁":"寧","审":"審","庙":"廟","广":"廣","应":"應",
+  "乐":"樂","权":"權","岁":"歲","灭":"滅","汤":"湯","无":"無","杀":"殺","发":"發","当":"當",
+  "兴":"興","举":"舉","县":"縣","战":"戰","几":"幾","后":"後","复":"復","处":"處","车":"車",
+  "军":"軍","长":"長","为":"為","爱":"愛","恶":"惡","忧":"憂","愿":"願","体":"體","黄":"黃",
+  "争":"爭","执":"執","报":"報","难":"難","怀":"懷","悬":"懸","辞":"辭","诗":"詩","号":"號",
+  "讳":"諱","继":"繼","续":"續","尽":"盡","盖":"蓋","会":"會","备":"備","废":"廢","刘":"劉",
+  "东":"東","两":"兩","丧":"喪","赵":"趙","郑":"鄭","郓":"鄆","邓":"鄧","卫":"衛","爷":"爺",
+  "义":"義","称":"稱","齐":"齊","书":"書","历":"曆","时":"時","国":"國","经":"經","传":"傳",
+  "声":"聲","孙":"孫","将":"將","可":"可","讲":"講","证":"證","见":"見","现":"現","见":"見",
+  "里":"里","万":"萬","师":"師","之":"之","东":"東","张":"張","说":"說","诗":"詩","变":"變",
+};
+/* 常用異體 → 通行繁體（命中異體用字） */
+const ORTHO = { "亖":"四", "秊":"年", "眀":"明", "隠":"隱", "涼":"凉", "媿":"愧", "免":"免" };
+
+function s2t(s){
+  let out="";
+  for(const ch of s){ out += S2T_MAP[ch] || ORTHO[ch] || ch; }
+  return out;
+}
+function queryVariants(s){
+  const set=new Set([s]);
+  const conv=s2t(s);
+  if(conv!==s) set.add(conv);
+  return Array.from(set).sort((a,b)=>b.length-a.length);
+}
+/* 在 text 中找 query 的所有命中（試所有簡繁候選），回傳 {count, spans} */
+function findAll(query, text){
+  const cands=queryVariants(query);
+  const spans=[];
+  const seen=new Set();
+  for(let idx=0; idx<text.length; ){
+    let matchedLen=0;
+    for(const c of cands){
+      if(c.length===0 || idx+c.length>text.length) continue;
+      if(text.startsWith(c,idx)){ matchedLen=c.length; break; }
+    }
+    if(matchedLen){
+      if(!seen.has(idx)){ seen.add(idx); spans.push([idx, idx+matchedLen]); }
+      idx+=matchedLen;
+    } else idx++;
+  }
+  return { count:spans.length, spans };
+}
+
+/* ---------- 全域資料 ---------- */
+let DATA=null;              // 解析後的資料 { chuan: {...} }
+let ALL_ENTRIES=[];         // 扁平 [{chuTra,duke,year,num,jing,zhuan,text}]
+let ALL_TEXT="";            // 全文拼接（用於單字總覽／快速）
+let DATA_STATS=null;
+
+function rebuildEntries(){
+  ALL_ENTRIES=[];
+  let all="";
+  const chuan=DATA&&DATA.chuan||{};
+  for(const chuTra of CHUAN_TRA){
+    const cd=chuan[chuTra]||{};
+    for(const duke of DUKES){
+      const dk=cd[duke];
+      if(!dk || !dk.years) continue;
+      for(const yk in dk.years){
+        const y=dk.years[yk];
+        const text=(y.jing?("【經】"+y.jing):"")+(y.zhuan?("【傳】"+y.zhuan):"");
+        ALL_ENTRIES.push({ chuTra, duke, year:y.num==null?parseInt(yk):y.num,
+          jing:y.jing||"", zhuan:y.zhuan||"", text });
+        if(all) all+="\n"; all+=text;
+      }
+    }
+  }
+  ALL_TEXT=all;
+}
+function computeStats(){
+  const s={};
+  for(const chuTra of CHUAN_TRA){
+    const cd=DATA&&DATA.chuan&&DATA.chuan[chuTra]||{};
+    let years=0,chars=0;
+    const dukeStats={};
+    for(const duke of DUKES){
+      const dk=cd[duke];
+      const n=dk&&dk.years?Object.keys(dk.years).length:0;
+      dukeStats[duke]=n; years+=n;
+      if(dk&&dk.years){ for(const k in dk.years){ chars+= (dk.years[k].jing||"").length+(dk.years[k].zhuan||"").length; } }
+    }
+    s[chuTra]={dukes:Object.keys(cd).length, years, chars, dukeStats};
+  }
+  return s;
+}
+
+/* 進度：載入資料檔（fetch，可設 0/50/100） */
+function loadData(force){
+  return new Promise(async(resolve)=>{
+    setProgress(0,"開始載入資料…");
+    // 嘗試快取（除非 force）
+    if(!force){
+      const raw=store.get(CACHE_VER);
+      if(raw){ try{ const c=JSON.parse(raw);
+        if(c && c.ver===CACHE_VER && c.data && c.data.chuan &&
+           Date.now()-c.fetchedAt < TTL_MS){
+          DATA=c.data; rebuildEntries(); DATA_STATS=computeStats();
+          setProgress(100,"已從本機快取載入資料");
+          resolve({from:'cache'}); return;
+        } }catch(e){ /* 快取損壞則重新載 */ }
+      }
+    }
+    setProgress(15,"正在讀取 chunqiu-data.json…");
+    try{
+      const resp=await fetch(DATA_URL, { cache:"no-store" });
+      if(!resp.ok) throw new Error("HTTP "+resp.status+"（請確認 chunqiu-data.json 與本頁同目錄）");
+      setProgress(60,"解析資料…");
+      const j=await resp.json();
+      if(!j || !j.chuan) throw new Error("資料格式不符（缺少 chuan 欄位）");
+      DATA=j; rebuildEntries(); DATA_STATS=computeStats();
+      setProgress(90,"寫入本機快取…");
+      const ok=store.set(CACHE_VER, JSON.stringify({ver:CACHE_VER, fetchedAt:Date.now(), data:j}));
+      setProgress(100, ok?"資料載入完成":"資料載入完成（快取空間不足，未寫入）");
+      resolve({from:'file', cached:ok});
+    }catch(e){
+      setProgress(0,"載入失敗");
+      resolve({from:'error', error:String(e&&e.message||e)});
+    }
+  });
+}
+
+/* ---------- 渲染工具 ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function yearLabel(duke,num){ return duke + (isNaN(num)?"":num)+"年"; }
+
+/* ---------- 頁籤切換 ---------- */
+const tabIDs=["tab-data","tab-search","tab-char","tab-compare","tab-info"];
+const paneIDs=["pane-data","pane-search","pane-char","pane-compare","pane-info"];
+function setTab(id){
+  for(const t of tabIDs){ document.getElementById(t).setAttribute("aria-selected", String(t===id)); }
+  for(let i=0;i<tabIDs.length;i++){ document.getElementById(paneIDs[i]).hidden = (tabIDs[i]!==id); }
+  if(id==="tab-compare") populateCompareSel();
+}
+tabIDs.forEach(tid=>{ document.getElementById(tid).addEventListener("click",()=>setTab(tid)); });
+
+/* ---------- 主題 ---------- */
+function initTheme(){
+  if(store.get("cqs3-theme")==="dark") document.documentElement.dataset.theme="dark";
+}
+document.getElementById("themeBtn").addEventListener("click",()=>{
+  const dark=document.documentElement.dataset.theme==="dark";
+  document.documentElement.dataset.theme = dark?"light":"dark";
+  store.set("cqs3-theme", dark?"light":"dark");
+});
+
+/* ---------- 資料面板 ---------- */
+const dataStatus=document.getElementById("dataStatus");
+const dataMeta=document.getElementById("dataMeta");
+
+function renderDataState(){
+  if(!DATA_STATS){
+    dataStatus.className="status info";
+    dataStatus.textContent="尚未載入資料。點「載入資料」讀取本機資料檔。";
+    dataMeta.innerHTML="";
+    return;
+  }
+  dataStatus.className="status info";
+  dataStatus.textContent="資料已就緒："+ALL_ENTRIES.length+" 條「公·年」條目。可切至「全文檢索」「搜字索引」「三傳對比」。";
+  let html='<div class="meta-grid">';
+  for(const chuTra of CHUAN_TRA){
+    const s=DATA_STATS[chuTra];
+    // 找出缺失年份
+    const missing=[];
+    for(const duke of DUKES){
+      const expect={ "左傳":[11,18,32,2,33,18,18,18,31,32,15,27],
+                     "公羊傳":[11,18,32,2,33,18,18,18,31,32,15,14],
+                     "穀梁傳":[11,18,32,2,33,18,18,18,31,32,15,14]}[chuTra];
+      const conn=DUKES.indexOf(duke);
+      const got=DATA.chuan[chuTra]&&DATA.chuan[chuTra][duke]&&DATA.chuan[chuTra][duke].years||{};
+      for(let y=1;y<=expect[conn];y++){ if(!got[y]) missing.push(duke+(y==1?"元":y)+"年"); }
+    }
+    html+='<div class="meta-box"><div class="k">'+esc(chuTra)+'</div><div class="v">'+s.years+' 年'+(missing.length?'<div class="k" style="color:var(--warn)">缺 '+missing.length+': '+esc(missing.join("、"))+'</div>':'')+'</div></div>';
+  }
+  html+='</div>';
+  dataMeta.innerHTML=html;
+}
+
+document.getElementById("clearCacheBtn").addEventListener("click",()=>{
+  store.del(CACHE_VER);
+  dataStatus.className="status info";
+  dataStatus.textContent="已清除本機快取（下次載入將重新讀取資料檔）。";
+  setProgress(0,"快取已清除");
+});
+
+document.getElementById("loadDataBtn").addEventListener("click",async()=>{
+  const btn=document.getElementById("loadDataBtn");
+  btn.disabled=true; btn.textContent="載入中…";
+  const r=await loadData(false);
+  btn.disabled=false; btn.textContent="載入資料";
+  if(r.from==='error'){
+    dataStatus.className="status err";
+    dataStatus.textContent="載入失敗："+r.error+"。請確認 chunqiu-data.json 已放在 index.html 同一目錄，並透過 HTTP 伺服器（非 file://）開啟本頁。";
+    renderDataState();
+  } else {
+    dataStatus.className="status ok";
+    dataStatus.textContent = r.from==='cache'
+      ? "資料已從本機快取載入（"+ALL_ENTRIES.length+" 條）。"
+      : "資料載入完成（"+ALL_ENTRIES.length+" 條"+(r.cached?"，已寫入快取":"，快取空間不足")+"）。";
+    renderDataState();
+  }
+});
+
+/* 「重新載入資料」：強制跳過快取讀檔 */
+document.getElementById("reloadBtn").addEventListener("click",async()=>{
+  const btn=document.getElementById("reloadBtn");
+  btn.disabled=true; btn.textContent="載入中…";
+  const r=await loadData(true);
+  btn.disabled=false; btn.textContent="重新載入資料";
+  if(r.from==='error'){
+    dataStatus.className="status err";
+    dataStatus.textContent="重新載入失敗："+r.error;
+  } else {
+    dataStatus.className="status ok";
+    dataStatus.textContent="已重新載入資料（"+ALL_ENTRIES.length+" 條）"+(r.cached?"，已寫入快取":" (快取空間不足)")+"。";
+  }
+  renderDataState();
+});
+
+/* ---------- 全文檢索 ---------- */
+const searchStatus=document.getElementById("searchStatus");
+const searchResults=document.getElementById("searchResults");
+
+function renderHit(entry, span){
+  const [s,e]=span;
+  const preStart=Math.max(0,s-26);
+  const afterEnd=Math.min(entry.text.length, e+40);
+  const pre=entry.text.slice(preStart,s);
+  const hit=entry.text.slice(s,e);
+  const after=entry.text.slice(e,afterEnd);
+  return '<div class="result">'+
+    '<div class="head"><span class="pill tag">'+esc(entry.chuTra)+'</span>'+
+    '<span class="pill">'+esc(yearLabel(entry.duke,entry.year))+'</span></div>'+
+    '<div class="ctx">…'+esc(pre)+'<mark class="m">'+esc(hit)+'</mark>'+esc(after)+'…</div>'+
+    (entry.jing?'<div class="ctx"><span class="pill jing">經</span> '+esc(entry.jing.slice(0,60))+(entry.jing.length>60?"…":"")+'</div>':'')+
+    '</div>';
+}
+
+document.getElementById("searchForm").addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const rawQ=document.getElementById("q").value;
+  const q=rawQ.trim();
+  if(!q){ searchStatus.className="status info"; searchStatus.textContent="請輸入檢索關鍵詞。"; searchResults.innerHTML=""; return; }
+  if(!DATA){
+    searchStatus.className="status err";
+    searchStatus.textContent="尚未載入資料。請先到「資料載入」載入資料。";
+    searchResults.innerHTML=""; return;
+  }
+  setProgress(20,"檢索「"+rawQ+"」…");
+  searchStatus.className="status info";
+  searchStatus.textContent="檢索「"+rawQ+"」…";
+  const hits=[]; let total=0;
+  const N=ALL_ENTRIES.length;
+  for(let i=0;i<N;i++){
+    if(i%120===0) setProgress(20+Math.round(i/N*70), "檢索「"+rawQ+"」…");
+    const en=ALL_ENTRIES[i];
+    const {count,spans}=findAll(q, en.text);
+    if(count===0) continue;
+    total+=count;
+    for(const sp of spans.slice(0,50)) hits.push({en,span:sp});
+  }
+  setProgress(100,"檢索完成");
+  if(hits.length===0){
+    searchStatus.className="status info";
+    searchStatus.textContent="「"+rawQ+"」在全部三傳中無命中。請確字詞，或先載入資料。";
+    searchResults.innerHTML='<div class="nores">無命中結果。</div>'; return;
+  }
+  searchStatus.className="status ok";
+  searchStatus.textContent="「"+rawQ+"」共命中 "+total+" 處，渲染 "+hits.length+" 條（每條目最多 50 處）。";
+  let html='';
+  for(const {en,span} of hits) html+=renderHit(en,span);
+  searchResults.innerHTML=html;
+});
+
+/* ---------- 搜字索引 ---------- */
+const charStatus=document.getElementById("charStatus");
+const charResults=document.getElementById("charResults");
+
+document.getElementById("charForm").addEventListener("submit",(e)=>{
+  e.preventDefault();
+  const rawQ=document.getElementById("chq").value.trim();
+  if(!rawQ){ charStatus.className="status info"; charStatus.textContent="請輸入要統計的字。"; charResults.hidden=true; return; }
+  const ch=Array.from(rawQ)[0];
+  if(!DATA){
+    charStatus.className="status err";
+    charStatus.textContent="尚未載入資料。請先載入資料。";
+    charResults.hidden=true; return;
+  }
+  setProgress(20,"統計「"+ch+"」…");
+  charStatus.className="status info";
+  charStatus.textContent="統計「"+ch+"」…（含簡繁異體候選）";
+  const cands=queryVariants(ch);
+  const per={ "左傳":[], "公羊傳":[], "穀梁傳":[] };
+  let grand=0;
+  const N=ALL_ENTRIES.length;
+  for(let i=0;i<N;i++){
+    if(i%150===0) setProgress(20+Math.round(i/N*70),"統計「"+ch+"」…");
+    const en=ALL_ENTRIES[i];
+    if(en.chuTra!==per[en.chuTra] && !(en.chuTra in per)) continue;
+    // 該條目命中次數（用候選，計算唯一起點集合）
+    let cnt=0; const seen=new Set();
+    for(const cd of cands){ if(!cd)continue; let idx=en.text.indexOf(cd); while(idx!==-1){ seen.add(idx); idx=en.text.indexOf(cd,idx+cd.length);} }
+    cnt=seen.size;
+    if(cnt>0){ grand+=cnt; per[en.chuTra].push({en,cnt}); }
+  }
+  setProgress(100,"統計完成");
+  const totals={ "左傳":0,"公羊傳":0,"穀梁傳":0 };
+  for(const ct of CHUAN_TRA) totals[ct]=per[ct].reduce((a,b)=>a+b.cnt,0);
+  charStatus.className="status ok";
+  charStatus.textContent="「"+ch+"」三傳總計 "+grand+" 次。";
+  let html='<div class="meta-grid" style="margin:12px 0">'+
+    '<div class="meta-box"><div class="k">三傳總計</div><div class="v">'+grand+'</div></div>'+
+    CHUAN_TRA.map(ct=>'<div class="meta-box"><div class="k">'+ct+'</div><div class="v">'+totals[ct]+'</div></div>').join("")+
+    '</div>';
+  /* 柱狀圖（三傳數量對比） */
+  const maxN=Math.max(1, grand);
+  const barCfg=[ ["左傳","zuo"], ["公羊傳","gong"], ["穀梁傳","gu"] ];
+  html+='<div class="bar-chart" role="img" aria-label="三傳中含「'+ch+'」的數量柱狀圖">'+
+    barCfg.map(([ct,cls])=>{
+      const cnt=totals[ct];
+      const pct=Math.max(2, Math.round(cnt/maxN*100));
+      return '<div class="bar-col '+cls+'">'+
+        '<div class="val">'+cnt+'</div>'+
+        '<div class="track" style="height:150px"><div class="bar" style="height:'+pct+'%" title="'+ct+' '+cnt+' 次"></div></div>'+
+        '<div class="name">'+ct+'</div></div>';
+    }).join("")+'</div>';
+  for(const ct of CHUAN_TRA){
+    html+='<h3 style="color:var(--accent);font-size:1rem;margin:22px 0 4px">'+ct+'　共 '+totals[ct]+' 次</h3>';
+    if(totals[ct]===0){ html+='<div class="nores">此字未見於該傳。</div>'; continue; }
+    let shown=0;
+    for(const it of per[ct]){
+      if(shown>=12) break;
+      const en=it.en;
+      // 第一處命中上下文
+      const idx=en.text.indexOf(ch);
+      const winB=Math.max(0,idx-14), winE=Math.min(en.text.length, idx+16);
+      html+='<div class="result" style="background:var(--panel)"><div class="head"><span class="pill">'+esc(yearLabel(en.duke,en.year))+'</span><span class="pill">'+it.cnt+' 次</span></div>'+
+        '<div class="ctx">…'+esc(en.text.slice(winB,idx))+'<mark class="m">'+esc(en.text.slice(idx,idx+ch.length))+'</mark>'+esc(en.text.slice(idx+ch.length,winE))+'…</div></div>';
+      shown++;
+    }
+    if(totals[ct]>shown || per[ct].length>shown) html+='<div class="nores">…尚有更多，未全部列出。</div>';
+  }
+  charResults.innerHTML=html;
+  charResults.hidden=false;
+});
+
+/* ---------- 三傳對比 ---------- */
+const cDuke=document.getElementById("cDuke");
+const cYear=document.getElementById("cYear");
+const cmpNote=document.getElementById("cmpNote");
+
+function populateCompareSel(){
+  if(!DATA || !DATA.chuan) return;
+  cDuke.innerHTML=DUKES.map(d=>'<option value="'+d+'">'+d+'</option>').join("");
+  updateYearOptions();
+}
+function updateYearOptions(){
+  const duke=cDuke.value;
+  const nums=new Set();
+  const cd=DATA&&DATA.chuan&&DATA.chuan["左傳"]&&DATA.chuan["左傳"][duke]||{};
+  if(cd.years){ for(const k in cd.years) nums.add(cd.years[k].num==null?parseInt(k):cd.years[k].num); }
+  const years=Array.from(nums).sort((a,b)=>a-b);
+  cYear.innerHTML=years.length? years.map(n=>'<option value="'+n+'">'+n+' 年</option>').join("")
+    :'<option value="">（暫無資料）</option>';
+}
+cDuke.addEventListener("change",updateYearOptions);
+
+function renderCompare(){
+  const duke=cDuke.value;
+  const num=parseInt(cYear.value,10);
+  if(isNaN(num)){ cmpNote.textContent=""; return; }
+  cmpNote.textContent="（對照僅以『"+duke+"第"+num+"年』為準，三傳行文不一，非逐句對應。）";
+  for(const ct of CHUAN_TRA){
+    const box=document.getElementById("cmp-"+ct);
+    const dk=DATA&&DATA.chuan&&DATA.chuan[ct]&&DATA.chuan[ct][duke]||{};
+    const y=dk.years&&dk.years[num];
+    const sub=document.createElement("div");
+    sub.className="sub";
+    sub.textContent="資料：「"+ct+" · "+yearLabel(duke,num)+"」"+(y?"":"（該傳此年於資料源中無條目）");
+    if(y){
+      let inner="";
+      if(y.jing) inner+='<span class="jtext">【經】'+esc(y.jing)+'</span>';
+      if(y.zhuan) inner+='<span class="ztext">　【傳】'+esc(y.zhuan)+'</span>';
+      box.innerHTML=inner;
+    } else {
+      box.innerHTML='<span class="empty">—（該傳此年缺資料）</span>';
+    }
+    box.appendChild(sub);
+  }
+}
+cYear.addEventListener("change",renderCompare);
+
+/* ---------- 初始化 ---------- */
+initTheme();
+setTab("tab-data");
+renderDataState();
+setProgress(0,"待載入資料");
+
+</script>
+</body>
+</html>
