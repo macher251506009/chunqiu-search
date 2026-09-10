@@ -133,6 +133,29 @@
   mark.m{background:var(--hl);color:inherit;padding:0 1px;border-radius:2px}
   .nores{color:var(--ink-soft);font-family:var(--serif);font-size:.92rem;padding:8px 0}
 
+  /* ---- 人物索引 ---- */
+  .ppill{display:inline-block;font-family:var(--serif);font-size:.74rem;padding:1px 8px;border-radius:12px;background:#e4efe4;color:var(--ok);margin-right:4px}
+  .ppill.u{background:#f6e0db;color:var(--warn)}
+  .ppers{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;padding:11px 13px;border:1px solid var(--line);border-bottom:none;background:var(--bg);cursor:pointer}
+  .ppers:last-of-type{border-bottom:1px solid var(--line);border-radius:0 0 8px 8px}
+  .ppers:hover{background:var(--chip)}
+  .ppers .nm{font-weight:700;font-size:1rem}
+  .ppers .st{color:var(--ink-soft);font-size:.86rem}
+  .ppers .ali{font-family:var(--serif);font-size:.85rem;color:var(--ink-soft)}
+  .ppers .ap{font-size:.86rem;color:var(--accent)}
+  .ppers.sel{outline:2px solid var(--accent);outline-offset:-1px}
+  #personDetail .pd{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-top:14px;line-height:1.9}
+  #personDetail h3{margin:0 0 6px}
+  .timeline{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+  .tchip{font-family:var(--serif);font-size:.78rem;padding:2px 8px;border-radius:6px;background:var(--chip);color:var(--ink);cursor:pointer;border:1px solid transparent;display:inline-block}
+  .tchip:hover{border-color:var(--accent);color:var(--accent)}
+  .evsec{background:var(--panel);border:1px dashed var(--line);border-radius:8px;padding:10px 12px;margin-top:12px}
+  .evsec h4{margin:0 0 8px;font-size:.95rem;color:var(--accent)}
+  .evrow{border-left:2px solid var(--line);padding-left:10px;margin:8px 0}
+  .evtext{font-family:var(--serif);font-size:.9rem;line-height:1.95;color:var(--ink);margin-top:2px;white-space:pre-wrap;word-break:break-word;background:var(--bg);border-radius:6px;padding:6px 9px}
+  .evtext mark,.evtext em{background:var(--hl);font-style:normal;color:inherit}
+
+
   .compare-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
   .col{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--bg);min-width:0}
   .col h3{margin:0 0 8px;font-size:1.02rem;color:var(--accent);font-weight:700;
@@ -182,6 +205,67 @@
     padding:8px 14px;z-index:99;border-radius:0 0 8px 0}
   .skip:focus{left:0}
 
+  /* ── 國別導覽（譚圖冊）────────────────────── */
+  #pane-atlas{margin-top:2px}
+  .az-step{font-family:var(--serif);font-size:.84rem;color:var(--accent);font-weight:600;
+    letter-spacing:.4px;margin:14px 0 6px}
+  .az-card{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:10px 13px;margin-bottom:8px}
+  .az-scroller{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px}
+  .az-mapcard{border:1px solid var(--line);background:var(--bg);border-radius:10px;
+    padding:7px 11px;min-width:176px;cursor:pointer;flex:0 0 auto;font-family:var(--serif)}
+  .az-mapcard .mt{font-weight:700;font-size:.95rem;color:var(--ink)}
+  .az-mapcard .mf{font-size:.74rem;color:var(--ink-soft);margin-top:3px;line-height:1.4}
+  .az-mapcard .mids{font-size:.7rem;color:var(--accent)}
+  .az-mapcard:hover{border-color:var(--accent)}
+  .az-mapcard.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .az-mapcard.on .mt,.az-mapcard.on .mf,.az-mapcard.on .mids{color:#fff}
+  .az-mapcard.alle{border-style:dashed;border-color:var(--line);background:var(--chip)}
+  .az-mapcard.alle.on{background:#3a2e16;border-style:dashed;border-color:#3a2e16;color:#fff}
+  .az-stategrid{display:flex;flex-wrap:wrap;gap:7px}
+  .az-chip{border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:5px 11px;
+    cursor:pointer;display:inline-flex;align-items:baseline;gap:6px;font-family:var(--serif);
+    position:relative}
+  .az-chip b{font-weight:700;font-size:1rem}
+  .az-chip .n{font-size:.76rem;color:var(--ink-soft)}
+  .az-chip small{font-size:.64rem;color:var(--accent);opacity:.85}
+  .az-chip:hover{border-color:var(--accent)}
+  .az-chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .az-chip.on .n,.az-chip.on small{color:#ffe3cf}
+  .az-chip.ghz{background:var(--chip);opacity:.66;cursor:default}
+  .az-chip.ghz b{color:var(--ink-soft)}
+  .az-foldlabel{font-family:var(--serif);font-size:.72rem;color:var(--ink-soft);
+    width:100%;margin:8px 0 2px;letter-spacing:.2px}
+  .az-hint{font-family:var(--serif);font-size:.78rem;color:var(--ink-soft);margin-left:6px}
+  .az-dukebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .az-dukeseq{display:flex;gap:5px;flex-wrap:wrap}
+  .az-dukebtn{display:inline-flex;flex-direction:column;align-items:flex-start;
+    border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 9px;
+    cursor:pointer;font-family:var(--serif);font-size:.92rem;min-width:46px}
+  .az-dukebtn .yr{font-size:.64rem;opacity:.7;color:var(--ink-soft)}
+  .az-dukebtn:hover{border-color:var(--accent)}
+  .az-dukebtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .az-dukebtn.on .yr{color:#fff;opacity:.9}
+  .az-dukemeta{font-family:var(--serif);font-size:.8rem;color:var(--ink-soft)}
+  .az-twocol{display:grid;grid-template-columns:1.15fr 1fr;gap:14px;align-items:start;margin-top:10px}
+  @media (max-width:820px){.az-twocol{grid-template-columns:1fr}}
+  .az-listhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+    margin:2px 0 6px;flex-wrap:wrap}
+  .az-listhead h3{margin:0;font-size:1rem;color:var(--ink)}
+  .az-listnote{font-family:var(--serif);font-size:.8rem;color:var(--ink-soft)}
+  .az-plist{max-height:520px;overflow-y:auto;border:1px solid var(--line);border-radius:8px}
+  .az-showmore{width:100%;border:1px dashed var(--line);background:var(--chip);color:var(--accent);
+    font-family:var(--serif);border-radius:8px;padding:8px;cursor:pointer;margin-top:6px}
+  .az-showmore:hover{border-color:var(--accent)}
+  #pane-atlas h2{margin:0 0 2px}
+  #pane-atlas .az-hu{font-size:.84rem;color:var(--ink-soft);margin:0 0 8px;line-height:1.7}
+  /* 詳情框與人物索引共用人樣式 */
+  #atlasDetail .pd{background:var(--bg);border:1px solid var(--line);border-radius:8px;
+    padding:14px 16px;margin-top:14px;line-height:1.9}
+  #atlasDetail h3{margin:0 0 6px}
+  #pane-atlas .ppers{cursor:pointer}
+  .az-ghmemo{font-size:.72rem;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+
   @media (max-width:820px){
     .compare-cols{grid-template-columns:1fr}
     .site-logo{width:150px}
@@ -218,6 +302,8 @@
     <button class="tab" role="tab" id="tab-search" aria-selected="false" aria-controls="pane-search">全文檢索</button>
     <button class="tab" role="tab" id="tab-char" aria-selected="false" aria-controls="pane-char">搜字索引</button>
     <button class="tab" role="tab" id="tab-compare" aria-selected="false" aria-controls="pane-compare">三傳對比</button>
+    <button class="tab" role="tab" id="tab-person" aria-selected="false" aria-controls="pane-person">人物索引</button>
+    <button class="tab" role="tab" id="tab-atlas" aria-selected="false" aria-controls="pane-atlas">國別導覽</button>
     <button class="tab" role="tab" id="tab-info" aria-selected="false" aria-controls="pane-info">資料說明</button>
   </div>
 </nav>
@@ -291,6 +377,66 @@
         <div class="col"><h3>穀梁傳</h3><div class="body" id="cmp-穀梁傳"><span class="empty">—</span></div></div>
       </div>
       <p class="hint" id="cmpNote"></p>
+    </div>
+  </section>
+
+  <!-- PANE: PERSON 人物索引 -->
+  <section id="pane-person" role="tabpanel" aria-labelledby="tab-person" hidden>
+    <div class="panel">
+      <h2>人物索引</h2>
+      <p class="hint">依三傳原文整理出的<strong>人物別名同指索引</strong>（由 AI 逐「魯公ㆍ年」建立、再跨年合併；欄位含主稱、國別、別名、出現在哪些公年）。AI 生成僅屬<strong>候選</strong>——凡<span class="ppill u">存疑</span>者建議以可靠點校本／楊伯峻注人工複核後再用。</p>
+      <form id="personForm" autocomplete="off">
+        <div class="row">
+          <input class="field grow" id="pq" type="text" placeholder="輸入人名／別名／人物國別，例：子產、季文子、齊桓公、叔向" aria-label="搜尋人物">
+          <select class="field" id="pState" aria-label="按國別篩選" style="max-width:150px"><option value="">全部國別</option></select>
+          <button class="btn primary" type="submit">搜尋</button>
+        </div>
+        <label class="check" style="margin-top:8px;display:flex;gap:6px;align-items:center">
+          <input type="checkbox" id="onlyUncertain"> 只看存疑人物
+        </label>
+      </form>
+      <div class="status info" id="personStatus">人物索引資料尚未載入（首次使用需載入 ~0.6MB 的索引檔）。</div>
+      <div id="personResults"></div>
+      <div id="personDetail"></div>
+    </div>
+  </section>
+
+  <!-- PANE: ATLAS 國別導覽（譚圖冊） -->
+  <section id="pane-atlas" role="tabpanel" aria-labelledby="tab-atlas" hidden>
+    <div class="panel">
+      <h2>國別導覽</h2>
+      <p class="az-hu">依<span class="pill">譚其驤《中國歷史地圖集》</span>分幅挑圖 → 見該幅屬國 → 點國（頂上可再切「魯公」時間片）→ 列出此國人物 → 點人看<b>原文片段</b>與三傳年次核對。人物皆與「人物索引」同步，可直接跳到該年三傳全文。</p>
+
+      <div class="az-step">㊀　先選一幅圖（譚其驤冊頁）；不想分幅可點「全部諸國」</div>
+      <div class="az-card"><div class="az-scroller" id="azMapRow"></div></div>
+
+      <div class="az-step">㊁　選擇國家　<span class="az-hint" id="azStateHint"></span></div>
+      <div class="az-card">
+        <div class="az-stategrid" id="azStateGrid"></div>
+        <div id="azFoldZone"></div>
+      </div>
+
+      <div class="az-step">㊂　按「魯公」切時間片</div>
+      <div class="az-card">
+        <div class="az-dukebar">
+          <div class="az-dukeseq" id="azDukeRow"></div>
+          <span class="az-dukemeta" id="azDukeMeta"></span>
+        </div>
+      </div>
+
+      <div class="az-twocol">
+        <div class="az-card">
+          <div class="az-listhead"><h3 id="azStTitle">（尚未選國）</h3><span class="az-listnote" id="azListNote"></span></div>
+          <div class="az-plist" id="azPeople">
+            <div class="nores">上方點選一國，此處列出其人物。</div>
+          </div>
+        </div>
+        <div class="az-card" id="atlasDetail">
+          <div class="nores">點左側人物看詳情與其原文片段。</div>
+        </div>
+      </div>
+
+      <p class="az-ghmemo" id="azMemo"></p>
     </div>
   </section>
 
@@ -485,12 +631,13 @@ function esc(s){ return String(s).replace(/[&<>"']/g,c=>({
 function yearLabel(duke,num){ return duke + (isNaN(num)?"":num)+"年"; }
 
 /* ---------- 頁籤切換 ---------- */
-const tabIDs=["tab-data","tab-search","tab-char","tab-compare","tab-info"];
-const paneIDs=["pane-data","pane-search","pane-char","pane-compare","pane-info"];
+const tabIDs=["tab-data","tab-search","tab-char","tab-compare","tab-person","tab-atlas","tab-info"];
+const paneIDs=["pane-data","pane-search","pane-char","pane-compare","pane-person","pane-atlas","pane-info"];
 function setTab(id){
   for(const t of tabIDs){ document.getElementById(t).setAttribute("aria-selected", String(t===id)); }
   for(let i=0;i<tabIDs.length;i++){ document.getElementById(paneIDs[i]).hidden = (tabIDs[i]!==id); }
   if(id==="tab-compare") populateCompareSel();
+  if(id==="tab-atlas" && AZ_READY) renderAtlasVisible();
 }
 tabIDs.forEach(tid=>{ document.getElementById(tid).addEventListener("click",()=>setTab(tid)); });
 
@@ -749,6 +896,428 @@ function renderCompare(){
   }
 }
 cYear.addEventListener("change",renderCompare);
+
+/* ---------- 人物索引 (PERSON) ---------- */
+const PERSON_URL="person-index.json";
+let PERSON=null;            // {_meta,DUKE[],persons[]}
+let PERSON_FILTERED=[];
+let PERSON_SEL_ROW=null;    // currently open person object
+function jumpDukeYear(di,yr){
+  // 跳到三傳對比 tab 並選到該 公/年(取最接近既有年選項)
+  setTab("tab-compare");
+  if(!DATA||!DATA.chuan){ return; }
+  const duke=DUKES[di];
+  if(!duke) return;
+  cDuke.value=duke;
+  updateYearOptions();
+  let opts=[...cYear.options].map(o=>parseInt(o.value,10)).filter(n=>!isNaN(n));
+  let pick=-1;
+  if(opts.includes(yr)) pick=yr;
+  else{ // nearest
+    let best=opts[0];
+    for(const n of opts){ if(Math.abs(n-yr)<Math.abs(best-yr)) best=n; }
+    pick=best;
+  }
+  if(pick!==-1) cYear.value=String(pick);
+  renderCompare();
+}
+async function loadPersonIndex(force){
+  if(PERSON&&!force) return {ok:true,from:'memory'};
+  const st=document.getElementById("personStatus");
+  st.className="status info"; st.textContent="正在載入人物索引…（~0.6MB）";
+  try{
+    const r=await fetch(PERSON_URL,{cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    PERSON=await r.json();
+    const sts=new Set();
+    for(const p of PERSON.persons) if(p.st) sts.add(p.st);
+    const sel=document.getElementById("pState");
+    sel.innerHTML='<option value="">全部國別</option>'+Array.from(sts).sort().map(s=>'<option value="'+s+'">'+s+'</option>').join("");
+    st.className="status ok"; st.textContent="人物索引已載入（"+PERSON._meta.n_persons+" 人，含存疑 "+PERSON.persons.filter(p=>p.u).length+"）。";
+    runPersonFilter();
+    return {ok:true};
+  }catch(e){
+    st.className="status err"; st.textContent="人物索引載入失敗: "+String(e&&e.message||e)+"（請確認 person-index.json 與本頁同目錄）";
+    return {ok:false};
+  }
+}
+function escP(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function personSubtext(p){
+  const parts=[];
+  if(p.st) parts.push("〈"+p.st+"〉");
+  if(p.al&&p.al.length) parts.push("別名："+p.al.slice(0,6).join("・")+(p.al.length>6?"…":""));
+  const pa=p.ap||[];
+  if(pa.length) parts.push("出現 "+pa.length+" 年");
+  return parts.join(" • ");
+}
+function runPersonFilter(){
+  const box=document.getElementById("personResults");
+  const det=document.getElementById("personDetail");
+  if(!PERSON){ 
+    if(det)det.innerHTML='';
+    return; }
+  const q=(document.getElementById("pq").value||"").trim();
+  const st=(document.getElementById("pState").value||"");
+  const onlyU=document.getElementById("onlyUncertain").checked;
+  let list=PERSON.persons;
+  if(q){
+    const kw=q;
+    list=list.filter(p =>
+      (p.n&&p.n.includes(kw)) ||
+      (p.al||[]).some(a=>a.includes(kw)) ||
+      (p.st && p.st.includes(kw)) ||
+      (p.ps&&p.ps.includes(kw))
+    );
+  }
+  if(st){ list=list.filter(p=>p.st===st); }
+  if(onlyU){ list=list.filter(p=>p.u); }
+  PERSON_FILTERED=list;
+  const n=list.length;
+  const stE=document.getElementById("personStatus");
+  if(q||st||onlyU) stE.textContent=("篩出 "+n+" 人，滿足條件。").replace(/^\d+/, n); else stE.textContent="共 "+n+" 人(依國別·主稱排序)。輸入關鍵詞、選擇國別或勾『只看存疑』可縮小。";
+  stE.className="status okay2"==="x"?"":"status ok";
+  if(n===0){ box.innerHTML='<div class="nores">無符合的人物。</div>'; det.innerHTML=''; return; }
+  const MAX=200;
+  let h='';
+  for(let i=0;i<Math.min(n,MAX);i++){
+    const p=list[i];
+    h+='<div class="ppers'+(PERSON_SEL_ROW===p?' sel':'')+'" data-i="'+i+'" role="button">'
+      +'<span class="nm">'+escP(p.n)+'</span>'+(p.st?'<span class="st">〈'+escP(p.st)+'〉</span>':'')
+      +(p.u?'<span class="ppill u">存疑</span>':'')
+      +(p.al&&p.al.length?'<span class="ali">'+escP(p.al.slice(0,5).join("・"))+'</span>':'')
+      +(p.ap&&p.ap.length?'<span class="ap">'+p.ap.length+'年</span>':'')
+      +'</div>';
+  }
+  if(n>MAX) h+='<div class="nores">…共 '+n+' 人，只顯示前 '+MAX+'，請縮小條件。</div>';
+  box.innerHTML=h;
+  Array.from(box.querySelectorAll('.ppers')).forEach(el=>{
+    el.addEventListener('click',()=>{ showPersonDetail(list[+el.dataset.i]); });
+  });
+}
+async function showPersonDetail(p, ct){
+  if(!p){ return; }
+  PERSON_SEL_ROW=p;
+  // 重高亮清單
+  Array.from(document.querySelectorAll('#personResults .ppers')).forEach(e=>e.classList.remove('sel'));
+  const sel=document.querySelector('#personResults .ppers[data-high]');
+  const det = ct || document.getElementById("personDetail");
+  const persMissing = p.u;
+  let eraStr="";
+  if(p.er&&(p.er.start!=null&&p.er.end!=null)){
+    const D=DUKES;
+    const a=D[Math.floor(p.er.start/100)]+(p.er.start%100||'');
+    const b=D[Math.floor(p.er.end/100)]+(p.er.end%100||'');
+    eraStr=(a===b)?a:(a+"～"+b);
+  }
+  // alias list
+  const ali=p.al||[];
+  const alih = ali.length? ali.map(a=>'<span class="ppill">'+escP(a)+'</span>').join('') : '<span class="nores">(無別名)</span>';
+  const pa=p.ap||[];
+  pa.sort((x,y)=>x[0]-y[0]||x[1]-y[1]);
+  const tl = pa.length? pa.map(x=>{
+      const d=DUKES[x[0]]||('第'+(x[0]+1)+'公');
+      const lab=d+(x[1]|| 0)+'年';
+      return '<button class="tchip" data-di="'+x[0]+'" data-y="'+x[1]+'">'+lab+'</button>';
+    }).join('') : '';
+  // 事蹟原文片段 L1(offline 由原文抽窗, 每(公,年)至多一段證據)
+  const ev=(p.ev||[]).slice();
+  ev.sort((a,b)=>a.d-b.d||a.y-b.y);
+  const evRows = ev.length? '<div class="evsec"><h4>可考事蹟／原文片段 <span class="pill">點「年」跳該年三傳全文核對</span></h4>'
+    + ev.map(e=>{
+        const dk=DUKES[e.d]||('第'+(e.d+1)+'公');
+        const lab=escP(dk+e.y+'年·'+e.ct);
+        return '<div class="evrow"><button class="tchip" data-di="'+e.d+'" data-y="'+e.y+'" title="見這一年三傳全文">'+lab+'</button>'
+            + '<div class="evtext">'+escP(e.win||'')+'</div></div>';
+      }).join('') + '</div>' : '';
+  let html='<div class="pd"><h3>'+escP(p.n)
+    +'</h3><div class="pill '+ (p.u?'tag':'') +'" style="'+(p.u?'':'background:var(--chip);color:var(--ink-soft)')+'">'
+    +(p.u?'AI 存疑 — 建議人工複核':'AI 候選')+'</div>'
+    +'<p>'+(p.st?'國別：'+escP(p.st)+'<br>':'')
+    +(p.ps?'人設：'+escP(p.ps)+'<br>':'')
+    +(eraStr?'活躍：'+escP(eraStr)+'<br>':'')
+    +'別名：'+alih+'</p>'
+    +(pa.length?('<div class="timeline">'+(tl)+'</div>'):'')
+    +evRows
+    +'</div>';
+  det.innerHTML=html;
+  Array.from(det.querySelectorAll('.tchip')).forEach(b=>{
+    b.addEventListener('click',()=>jumpDukeYear(+b.dataset.di, +b.dataset.y));
+  });
+  if(det&&det.scrollIntoView) det.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.getElementById("personForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(!PERSON){ loadPersonIndex(true); return; }
+  runPersonFilter();
+});
+document.getElementById("pState").addEventListener("change",runPersonFilter);
+document.getElementById("onlyUncertain").addEventListener("change",runPersonFilter);
+document.getElementById("pq").addEventListener("input",()=>{ /* live */ });
+document.getElementById("tab-person").addEventListener("click",async ()=>{
+  if(!PERSON){ await loadPersonIndex(false); }
+  else runPersonFilter();
+});
+
+/* ============================================================
+   國別導覽（譚圖冊分幅 → 屬國 → 魯公 → 人物 → 原文片段）
+   資料資產懶載：atlas-data.js / atlas-maps.js / atlas-caps.js
+   （各定義 window.CQSTATE / window.ATLAS / window.CQCAPS）。
+   人物的權威詳情＝「人物索引」紀錄（原文片段屬 ev）：以主稱 .n
+   精確對應，已驗證 2911 位國別導覽人物皆唯一命中 person-index。
+   ============================================================ */
+let AZ_READY=false;            // 已載完資料並首次渲染
+let AZ_DONE_LOAD=false;        // 三檔 .js 已注入
+let AZ_S=null, AZ_AT=null, AZ_CAPS=null;
+let AZ_STATE_LOG=null;         // {counts,stateMaps,atlasKeys,usable,usableIdx,mapidx}
+let AZ_SEL={map:null,st:null,dk:null};
+let AZ_SHOWALL=false;
+let AZ_ETHNIC=(function(){return ["戎","狄","赤狄","白狄","翟","楼烦","林胡","山戎",
+  "长狄","北戎","孤竹","无终","令支","朝鲜","东胡","氐","羌","百濮","群舒","淮夷","荆蛮","百越"];})();
+
+function azGet(id){ return document.getElementById(id); }
+function azLoadOne(src){
+  return new Promise(function(ok,fail){
+    var s=document.createElement("script");
+    s.src=src; s.async=true;
+    s.onload=ok; s.onerror=function(){ fail(new Error("載入 "+src+" 失敗")); };
+    document.head.appendChild(s);
+  });
+}
+async function azLoadData(){
+  if(AZ_READY) return true;
+  if(!AZ_DONE_LOAD){
+    AZ_DONE_LOAD=true;
+    await azLoadOne("atlas-data.js");      // window.CQSTATE
+    await azLoadOne("atlas-maps.js");      // window.ATLAS
+    try{ await azLoadOne("atlas-caps.js"); }catch(e){ /* 首都座標僅供資訊 */ }
+  }
+  if(window.CQSTATE && window.ATLAS){
+    AZ_S=window.CQSTATE; AZ_AT=window.ATLAS; AZ_CAPS=window.CQCAPS||[];
+    return true;
+  }
+  return false;
+}
+/* 在進入分頁時被 setTab / tab-atlas 監聽呼叫 */
+async function renderAtlasVisible(){
+  if(AZ_READY){ azRenderAll(); return; }
+  var memo=azGet("azMemo");
+  memo.textContent="正在載入國別導覽資料…";
+  try{
+    var ok=await azLoadData();
+    if(!ok){ memo.textContent="資料載入失敗：請確認 atlas-data.js / atlas-maps.js 與本頁同目錄，並以 HTTP 伺服器開啟（勿用 file://）。"; return; }
+    azBuildStateLog();
+    azParseHash();
+    AZ_READY=true;
+    azRenderAll();
+  }catch(e){
+    memo.textContent="國別導覽初始化失敗："+String(e&&e.message||e);
+  }
+}
+/* ---- 預先構建索引 ---- */
+function azBuildStateLog(){
+  var counts={}, stateMaps={}, atlasKeys={};
+  var st;
+  for(st in AZ_S.states) counts[st]=AZ_S.states[st].length;
+  (AZ_AT.maps||[]).forEach(function(m){
+    (m.states||[]).forEach(function(stObj){
+      if(stObj.key){
+        atlasKeys[stObj.key]=1;
+        if(!stateMaps[stObj.key]) stateMaps[stObj.key]=[];
+        if(stateMaps[stObj.key].indexOf(m.id)<0) stateMaps[stObj.key].push(m.id);
+      }
+    });
+  });
+  var notEthnic=Object.keys(counts).filter(function(k){ return AZ_ETHNIC.indexOf(k)<0; });
+  notEthnic.sort(function(a,b){ return (counts[b]-counts[a]) || (a<b?-1:1); });
+  var usable=notEthnic.filter(function(s){ return atlasKeys[s] && counts[s]>0; });
+  var usableIdx={};
+  usable.forEach(function(s,i){ usableIdx[s]=i; });
+  var mapidx={};           // state key -> set of maps (same as stateMaps)
+  AZ_STATE_LOG={ counts:counts, stateMaps:stateMaps, atlasKeys:atlasKeys,
+    usable:usable, usableIdx:usableIdx, mapidx:stateMaps };
+}
+function azMapTitleById(id){
+  var at=AZ_AT.maps||[];
+  for(var i=0;i<at.length;i++) if(String(at[i].id)===String(id)) return at[i];
+  return null;
+}
+function azParseHash(){
+  var h=location.hash||"";
+  if(!h) return;
+  var mm=h.match(/[?#&]map=([^&#]+)/), ms=h.match(/[?#&]st=([^&#]+)/), mdk=h.match(/[?#&]dk=(\d+)/);
+  if(mm){ var m=azMapTitleById(mm[1]); if(m) AZ_SEL.map=String(m.id); }
+  if(ms){ try{ var key=decodeURIComponent(ms[1]); if(AZ_S.states[key]) AZ_SEL.st=key; }catch(e){} }
+  if(mdk){ var di=parseInt(mdk[1],10); if(!isNaN(di)&&di>=0&&di<DUKES.length) AZ_SEL.dk=di; }
+}
+/* ---- 渲染 ---- */
+function azRenderAll(){ azMapRow(); azStateGrid(); azDukeRow(); azPeople(); azMemo(); }
+
+function azMapRow(){
+  var row=azGet("azMapRow"); row.textContent="";
+  var el=function(cl,txt){ var d=document.createElement("div"); d.className=cl;
+    if(txt!=null) d.textContent=txt; return d; };
+  // 全部諸國
+  var allCard=el("az-mapcard alle on","");
+  allCard.innerHTML='<div class="mt">全部諸國（不按冊）</div><div class="mf">直接在所有人國間瀏覽（含六幅）</div>';
+  if(AZ_SEL.map!==null) allCard.classList.remove("on");
+  allCard.onclick=function(){ AZ_SEL.map=null; azRenderAll(); };
+  row.appendChild(allCard);
+  // 各冊
+  (AZ_AT.maps||[]).forEach(function(m){
+    var cnt=0;
+    (m.states||[]).forEach(function(stObj){ if(AZ_STATE_LOG.counts[stObj.key]>0) cnt++; });
+    var card=el("az-mapcard","");
+    if(AZ_SEL.map===String(m.id)) card.classList.add("on");
+    card.innerHTML='<div class="mt"></div><div class="mids"></div><div class="mf"></div>';
+    card.querySelector('.mt').textContent=m.title.replace('/','·');
+    card.querySelector('.mids').textContent='圖 '+m.id+' · '+m.states.length+' 屬國/部族';
+    card.querySelector('.mf').textContent=cnt+' 個可查人物之國';
+    card.onclick=function(){ AZ_SEL.map=String(m.id); azRenderAll();
+      var tg=azGet("azStateGrid");
+      setTimeout(function(){ if(tg&&tg.scrollIntoView) tg.scrollIntoView({behavior:"smooth",block:"nearest"}); },40); };
+    row.appendChild(card);
+  });
+}
+function azVisibleKeys(){
+  var L=AZ_STATE_LOG;
+  if(AZ_SEL.map==null) return L.usable.slice();
+  var m=azMapTitleById(AZ_SEL.map), out=[], i;
+  if(!m) return [];
+  (m.states||[]).forEach(function(stObj){
+    var k=stObj.key;
+    if(L.usableIdx[k]!=null && out.indexOf(k)<0) out.push(k);
+  });
+  return out;
+}
+function azStateGrid(){
+  var grid=azGet("azStateGrid"), fold=azGet("azFoldZone");
+  grid.textContent=""; fold.textContent="";
+  var hint=azGet("azStateHint");
+  var vis=azVisibleKeys(), i;
+  if(!vis.length){ grid.appendChild(azEl2('div','nores','此幅暫無可查人物之國。')); }
+  else for(i=0;i<vis.length;i++){ azChip(grid, vis[i]); }
+  /* 收折：該幅有標、但暫無人物可查的部族 */
+  if(AZ_SEL.map!=null){
+    var m=azMapTitleById(AZ_SEL.map), ghost=[], seen={};
+    (m.states||[]).forEach(function(stObj){
+      var k=stObj.key;
+      if(!AZ_STATE_LOG.usableIdx.hasOwnProperty(k) && !seen[k]){ seen[k]=1; ghost.push(stObj); }
+    });
+    if(ghost.length){
+      fold.appendChild(azEl2('div','az-foldlabel','（僅見於圖、暫無人物可查的部族／政體）'));
+      ghost.forEach(function(stObj){
+        var c=document.createElement('div'); c.className='az-chip ghz';
+        var d='';
+        d+='<b>'+escP(stObj.key||stObj.name)+'</b>';
+        d+='<span class="n">'+(stObj.cap?('都'+escP(stObj.cap)):(stObj.loc?escP(stObj.loc):''))+'</span>';
+        c.innerHTML=d; fold.appendChild(c);
+      });
+    }
+  }
+  hint.textContent = AZ_SEL.map!=null
+    ? (azMapTitleById(AZ_SEL.map).title+'　·　'+vis.length+' 個可查人國')
+    : ('全部諸國 · 主區 '+vis.length+' 國（皆可查人物）');
+}
+function azChip(grid,k){
+  var c=document.createElement("button"); c.type="button";
+  c.className="az-chip"+(AZ_SEL.st===k?" on":"");
+  if(k===AZ_SEL.st) c.setAttribute('aria-pressed','true'); else c.setAttribute('aria-pressed','false');
+  var ttl='';
+  (AZ_CAPS||[]).forEach(function(cp){ if(cp.st===k) ttl=(cp.name||'')+'　'+(cp.loc||cp.cap||''); });
+  if(ttl) c.title=ttl;
+  var short=((AZ_STATE_LOG.stateMaps[k]||[]).slice(0,3)).map(function(id){ return String(id).replace(/^\d{3}/,'' ); /* keep map display sigil */ }).join('');
+  var html='<b>'+escP(k)+'</b><span class="n">'+AZ_STATE_LOG.counts[k]+'人</span>';
+  if(short) html+='<small>'+escP(short)+'</small>';
+  c.innerHTML=html;
+  c.onclick=function(){ AZ_SEL.st=(AZ_SEL.st===k?null:k); azDukeRow(); azPeople(); };
+  grid.appendChild(c);
+}
+function azDukeRow(){
+  var row=azGet("azDukeRow"); row.textContent="";
+  var meta=azGet("azDukeMeta"), i;
+  for(i=0;i<DUKES.length;i++){
+    var dn=DUKES[i];
+    var b=document.createElement("button"); b.type="button"; b.className="az-dukebtn"+(AZ_SEL.dk===i?" on":"");
+    b.innerHTML='<span>'+escP(dn.replace('公',''))+'</span><span class="yr">'+escP(dn)+'</span>';
+    b.title='只看'+dn+'；再次點可回到全部年代';
+    b.onclick=(function(idx){ return function(){ AZ_SEL.dk=(AZ_SEL.dk===idx?null:idx); azDukeRow(); azPeople(); }; })(i);
+    row.appendChild(b);
+  }
+  meta.textContent = AZ_SEL.dk==null ? '（未切＝顯示全部年代）' : '只看 ◈ '+DUKES[AZ_SEL.dk]+' ◈';
+}
+var AZ_CHUNK=60;
+function azDukeSpan(du){
+  if(!du||!du.length) return '—';
+  var a0=du[0], a1=du[du.length-1];
+  function nm(i){ return DUKES[i]?DUKES[i].replace('公',''):String(i); }
+  return (a0===a1)? nm(a0) : nm(a0)+'~'+nm(a1);
+}
+function azPeople(){
+  var title=azGet("azStTitle"), note=azGet("azListNote"),
+      box=azGet("azPeople"), det=azGet("atlasDetail"), i;
+  title.textContent = AZ_SEL.st ? (AZ_SEL.st+'國') : '（尚未選國）';
+  box.textContent="";
+  det.innerHTML='<div class="nores">點左側人物，於此查詳情與「原文片段」。</div>';
+  if(!AZ_SEL.st){ box.appendChild(azEl2('div','nores','先在上方點選一國，即可列出其人物。')); return; }
+  var ps=AZ_S.states[AZ_SEL.st]||[];
+  var shown=ps;
+  if(AZ_SEL.dk!=null) shown=ps.filter(function(p){ return (p.du||[]).indexOf(AZ_SEL.dk)>=0; });
+  var totalTotal=ps.length;
+  note.textContent = AZ_SEL.dk==null ? ('共 '+totalTotal+' 人 · 全部年代') : (shown.length+' 人 · 見載於 '+DUKES[AZ_SEL.dk]);
+  if(!shown.length){ box.appendChild(azEl2('div','nores','該國於此魯公暫無收載人物。')); return; }
+  var list = (AZ_SHOWALL||shown.length<=AZ_CHUNK) ? shown : shown.slice(0,AZ_CHUNK);
+  for(i=0;i<list.length;i++){
+    (function(p){
+      var r=document.createElement("div"); r.className="ppers"; r.setAttribute("role","button");
+      var h='<span class="nm">'+escP(p.n)+'</span>';
+      if(p.u) h+='<span class="ppill u">存疑</span>';
+      if(p.src==='rule') h+='<span class="ali">（國別由簡介輔助補出）</span>';
+      if(p.al&&p.al.length) h+='<span class="ali">='+escP(p.al.slice(0,4).join('、'))+'</span>';
+      h+='<span class="ap">'+azDukeSpan(p.du||[])+'</span>';
+      r.innerHTML=h;
+      r.onclick=function(){ azPickPerson(r,p); };
+      box.appendChild(r);
+    })(list[i]);
+  }
+  if(!AZ_SHOWALL && shown.length>AZ_CHUNK){
+    var b=document.createElement("button"); b.type="button"; b.className="az-showmore";
+    b.textContent='… 顯示全部 '+shown.length+' 人 …';
+    b.onclick=function(){ AZ_SHOWALL=true; azPeople(); };
+    box.appendChild(b);
+  }
+}
+async function azEnsurePerson(){
+  if(PERSON) return true;
+  try{ await loadPersonIndex(false); return !!PERSON; }catch(e){ return false; }
+}
+function azPickPerson(rowEl,p){
+  var rows=document.querySelectorAll('#azPeople .ppers'), i;
+  for(i=0;i<rows.length;i++) rows[i].classList.remove("sel");
+  if(rowEl) rowEl.classList.add("sel");
+  var det=azGet("atlasDetail");
+  function render(){
+    var hit=(PERSON&&PERSON.persons)?PERSON.persons.find(function(q){ return q.n===p.n; }):null;
+    if(hit){ showPersonDetail(hit, det); }
+    else {
+      var h='<h3>'+escP(p.n)+'</h3><div class="pill tag">AI 候選</div><p>'
+        +(p.al&&p.al.length?('別名：'+escP(p.al.join('、'))+'<br>'):'')
+        +(p.ps?('簡介：'+escP(p.ps)):'')+'</p>';
+      h+='<p class="nores">完整原文片段需「人物索引」資料；可先到「人物索引」分頁載入後再回來查看此人原文。</p>';
+      det.innerHTML=h;
+    }
+  }
+  if(!PERSON){ azEnsurePerson().then(render); } else { render(); }
+}
+function azMemo(){
+  var memo=azGet("azMemo");
+  var src=(AZ_AT&&AZ_AT.source)||'譚其驤《中國歷史地圖集》';
+  memo.textContent='【資料】底冊：'+src+'。分幅屬國內編自 chunqiu_atlas.py（據譚圖人工轉寫）；人物錄自 AI 逐「公ㆍ年」建立之人名同指索引。點人物後由「人物索引」資料供原文片段（點「年」可跳該年三傳全文核對）。「存疑」與「國別由簡介補出」皆屬 AI 候選，正式引用前請以楊伯峻《左傳注》等校點本人工複核。';
+}
+/* 自用小 helpers（避免污染全域） */
+function azEl2(tag,cls,txt){ var e=document.createElement(tag); if(cls)e.className=cls; if(txt!=null)e.textContent=txt; return e; }
+
+/* 點「國別導覽」分頁且資料就緒時 → 已由 setTab 內記的 flag 呼叫 renderAtlasVisible */
+document.getElementById("tab-atlas").addEventListener("click",async function(){ await renderAtlasVisible(); });
 
 /* ---------- 初始化 ---------- */
 initTheme();
