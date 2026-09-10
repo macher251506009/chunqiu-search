@@ -1101,9 +1101,9 @@ async function azLoadData(){
   if(AZ_READY) return true;
   if(!AZ_DONE_LOAD){
     AZ_DONE_LOAD=true;
-    await azLoadOne("atlas-data.js");      // window.CQSTATE
-    await azLoadOne("atlas-maps.js");      // window.ATLAS
-    try{ await azLoadOne("atlas-caps.js"); }catch(e){ /* 首都座標僅供資訊 */ }
+    await azLoadOne("atlas-data.js?v=2");      // window.CQSTATE
+    await azLoadOne("atlas-maps.js?v=2");      // window.ATLAS
+    try{ await azLoadOne("atlas-caps.js?v=2"); }catch(e){ /* 首都座標僅供資訊 */ }
   }
   if(window.CQSTATE && window.ATLAS){
     AZ_S=window.CQSTATE; AZ_AT=window.ATLAS; AZ_CAPS=window.CQCAPS||[];
