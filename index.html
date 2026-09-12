@@ -273,6 +273,40 @@
   .az-mapview .az-mapcap{font-family:var(--serif);font-size:.76rem;color:var(--ink-soft);margin-top:6px}
   html[data-theme="dark"] .az-mapview img{background:#111;border-color:#444}
 
+  /* ── 左傳閱讀頁（主線文本）────────────────── */
+  .zuo-hu{font-size:.86rem;color:var(--ink-soft);margin:0 0 10px;line-height:1.8}
+  .zuo-nav{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:12px}
+  .zuo-navrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0}
+  .zuo-navrow .lbl{margin:0}
+  .zuo-pos{font-family:var(--serif);font-size:.82rem;color:var(--ink-soft)}
+  .zuo-body{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 18px;line-height:2.05}
+  .zuo-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    border-bottom:1px dashed var(--line);padding-bottom:8px;margin-bottom:10px}
+  .zuo-title{font-size:1.22rem;font-weight:700;color:var(--accent)}
+  .zuo-sec{margin:10px 0;font-size:1.04rem;line-height:2.05}
+  .zuo-tag{font-family:var(--serif);font-size:.82rem;color:var(--accent);margin-right:6px;font-weight:700}
+  .zuo-sec .jtext{color:#2f5a8a}
+  .zuo-sec .ztext{color:#4c4232}
+  html[data-theme="dark"] .zuo-sec .jtext{color:#8fb4dc}
+  html[data-theme="dark"] .zuo-sec .ztext{color:var(--ink)}
+  .zuo-dephead{font-family:var(--serif);font-size:.82rem;color:var(--accent);font-weight:600;margin:14px 0 6px}
+  .zuo-dep{margin:6px 0}
+  .zuo-deptoggle{width:100%;text-align:left;border:1px dashed var(--line);background:var(--bg);
+    color:var(--ink);font-family:var(--serif);font-size:.94rem;padding:9px 12px;border-radius:8px;cursor:pointer}
+  .zuo-deptoggle:hover{border-color:var(--accent);color:var(--accent)}
+  .zuo-deptoggle[aria-expanded="true"]{border-style:solid;border-color:var(--accent);color:var(--accent)}
+  .zuo-deptoggle .caret{margin-right:4px}
+  .zuo-deptoggle .dim{font-size:.78rem;color:var(--ink-soft);margin-left:6px}
+  .zuo-depbody{margin:8px 0 4px;padding:12px 14px;background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;font-size:1rem;line-height:2}
+  .zuo-depbody .jtext{color:#2f5a8a}
+  .zuo-depbody .ztext{color:#4c4232}
+  html[data-theme="dark"] .zuo-depbody .jtext{color:#8fb4dc}
+  html[data-theme="dark"] .zuo-depbody .ztext{color:var(--ink)}
+  .zuo-depnote{margin-top:8px;font-size:.76rem}
+  .zuo-foot{margin-top:12px;font-size:.76rem;color:var(--ink-soft)}
+  .zuo-body .empty{color:var(--ink-soft);font-style:italic}
+
   @media (max-width:820px){
     .compare-cols{grid-template-columns:1fr}
     .site-logo{width:150px}
@@ -305,7 +339,8 @@
 
 <nav class="tabs safe" aria-label="功能頁籤" id="tabs">
   <div class="inner" role="tablist" aria-label="功能">
-    <button class="tab" role="tab" id="tab-data" aria-selected="true" aria-controls="pane-data">資料載入</button>
+    <button class="tab" role="tab" id="tab-zuo" aria-selected="true" aria-controls="pane-zuo">左傳</button>
+    <button class="tab" role="tab" id="tab-data" aria-selected="false" aria-controls="pane-data">資料載入</button>
     <button class="tab" role="tab" id="tab-search" aria-selected="false" aria-controls="pane-search">全文檢索</button>
     <button class="tab" role="tab" id="tab-char" aria-selected="false" aria-controls="pane-char">搜字索引</button>
     <button class="tab" role="tab" id="tab-compare" aria-selected="false" aria-controls="pane-compare">三傳對比</button>
@@ -316,8 +351,38 @@
 </nav>
 
 <main id="main" class="safe" role="main">
+  <!-- PANE: ZUO 左傳（預設首頁） -->
+  <section id="pane-zuo" role="tabpanel" aria-labelledby="tab-zuo">
+    <div class="panel">
+      <h2>左傳</h2>
+      <p class="zuo-hu">《春秋左氏傳》為本工具<strong>主線文本</strong>。以「魯公·年次」為閱讀單位，正文【經】＋【傳】並列。<strong>公羊傳、穀梁傳</strong>之同年文本<strong>依附於此</strong>——按「展開」才顯示，預設不展開。</p>
+
+      <div class="zuo-nav">
+        <div class="zuo-navrow">
+          <label class="lbl" for="zuoDuke">魯公</label>
+          <select class="field" id="zuoDuke" aria-label="選擇魯公"></select>
+          <label class="lbl" for="zuoYear">年次</label>
+          <select class="field" id="zuoYear" aria-label="選擇年次"></select>
+        </div>
+        <div class="zuo-navrow">
+          <button class="btn" id="zuoPrev" type="button">◀ 前一年</button>
+          <button class="btn" id="zuoNext" type="button">後一年 ▶</button>
+          <span class="zuo-pos" id="zuoPos"></span>
+        </div>
+      </div>
+
+      <div class="status info" id="zuoStatus">請先載入資料，再顯示左傳正文。</div>
+
+      <article class="zuo-body" id="zuoBody"></article>
+
+      <div class="zuo-deps" id="zuoDeps"></div>
+
+      <p class="zuo-foot" id="zuoFoot"></p>
+    </div>
+  </section>
+
   <!-- PANE: DATA 載入 -->
-  <section id="pane-data" role="tabpanel" aria-labelledby="tab-data">
+  <section id="pane-data" role="tabpanel" aria-labelledby="tab-data" hidden>
     <div class="panel">
       <h2>資料載入</h2>
       <p class="hint">載入預置的結構化資料檔 <code>chunqiu-data.json</code>（已自殆知閣原文解析並轉為繁體，含「傳 × 魯公 × 年次」）。<br>
@@ -645,11 +710,12 @@ function esc(s){ return String(s).replace(/[&<>"']/g,c=>({
 function yearLabel(duke,num){ return duke + (isNaN(num)?"":num)+"年"; }
 
 /* ---------- 頁籤切換 ---------- */
-const tabIDs=["tab-data","tab-search","tab-char","tab-compare","tab-person","tab-atlas","tab-info"];
-const paneIDs=["pane-data","pane-search","pane-char","pane-compare","pane-person","pane-atlas","pane-info"];
+const tabIDs=["tab-zuo","tab-data","tab-search","tab-char","tab-compare","tab-person","tab-atlas","tab-info"];
+const paneIDs=["pane-zuo","pane-data","pane-search","pane-char","pane-compare","pane-person","pane-atlas","pane-info"];
 function setTab(id){
   for(const t of tabIDs){ document.getElementById(t).setAttribute("aria-selected", String(t===id)); }
   for(let i=0;i<tabIDs.length;i++){ document.getElementById(paneIDs[i]).hidden = (tabIDs[i]!==id); }
+  if(id==="tab-zuo") renderZuo();
   if(id==="tab-compare") populateCompareSel();
   if(id==="tab-atlas" && AZ_READY) renderAtlasVisible();
 }
@@ -1360,9 +1426,131 @@ function azEl2(tag,cls,txt){ var e=document.createElement(tag); if(cls)e.classNa
 /* 點「國別導覽」分頁且資料就緒時 → 已由 setTab 內記的 flag 呼叫 renderAtlasVisible */
 document.getElementById("tab-atlas").addEventListener("click",async function(){ await renderAtlasVisible(); });
 
+/* ============================================================
+   左傳閱讀頁（主線文本）——公羊傳/穀梁傳同年文本「點擊才顯示」
+   ============================================================ */
+let ZUO_INITED=false;
+function zuoDukeSel(){ return document.getElementById("zuoDuke"); }
+function zuoYearSel(){ return document.getElementById("zuoYear"); }
+function zuoCurrentYearStr(){
+  const s=zuoYearSel(); return s? String(s.value):"";
+}
+function zuoInit(){
+  if(ZUO_INITED) return;
+  const ds=zuoDukeSel(); if(!ds) return;
+  ds.innerHTML=DUKES.map(d=>'<option value="'+d+'">'+d+'</option>').join("");
+  ds.value=DUKES[0];
+  ds.addEventListener("change",()=>{ zuoFillYears(); renderZuo(); });
+  zuoYearSel().addEventListener("change",()=>renderZuo());
+  document.getElementById("zuoPrev").addEventListener("click",()=>zuoStep(-1));
+  document.getElementById("zuoNext").addEventListener("click",()=>zuoStep(1));
+  ZUO_INITED=true;
+}
+function zuoYearsOf(duke){
+  // 以左傳的年次為準（左傳最全）
+  const dk=(DATA&&DATA.chuan&&DATA.chuan["左傳"]&&DATA.chuan["左傳"][duke])||{};
+  const ys=dk.years? Object.keys(dk.years).map(n=>parseInt(n,10)).sort((a,b)=>a-b):[];
+  return ys;
+}
+function zuoFillYears(){
+  const duke=zuoDukeSel().value;
+  const ys=zuoYearsOf(duke);
+  const sel=zuoYearSel();
+  const cur=sel.value;
+  sel.innerHTML=ys.map(n=>'<option value="'+n+'">'+yearLabel(duke,n)+'</option>').join("");
+  if(ys.map(String).indexOf(cur)>=0) sel.value=cur;
+}
+function zuoStep(dir){
+  const duke=zuoDukeSel().value;
+  let ys=zuoYearsOf(duke);
+  let idx=ys.indexOf(parseInt(zuoYearSel().value,10));
+  if(idx<0) idx=0;
+  let ni=idx+dir;
+  if(ni<0){
+    // 退到上一公最後一年
+    const di=DUKES.indexOf(duke)-1;
+    if(di>=0){ zuoDukeSel().value=DUKES[di]; zuoFillYears(); const yy=zuoYearsOf(DUKES[di]); zuoYearSel().value=String(yy[yy.length-1]); renderZuo(); }
+    return;
+  }
+  if(ni>=ys.length){
+    const di=DUKES.indexOf(duke)+1;
+    if(di<DUKES.length){ zuoDukeSel().value=DUKES[di]; zuoFillYears(); const yy=zuoYearsOf(DUKES[di]); if(yy.length){ zuoYearSel().value=String(yy[0]); renderZuo(); } }
+    return;
+  }
+  zuoYearSel().value=String(ys[ni]); renderZuo();
+}
+function zuoYearRec(ct,duke,num){
+  const dk=(DATA&&DATA.chuan&&DATA.chuan[ct]&&DATA.chuan[ct][duke])||{};
+  return (dk.years&&dk.years[num])||null;
+}
+function zuoDependentBlock(ct,duke,num){
+  const y=zuoYearRec(ct,duke,num);
+  const id="zuoDep-"+ct;
+  const hasText = y && (y.jing||y.zhuan);
+  const body = hasText
+    ? (y.jing? '<span class="jtext">【經】'+esc(y.jing)+'</span>':'')
+      + (y.zhuan? '<span class="ztext">　【傳】'+esc(y.zhuan)+'</span>':'')
+    : '<span class="empty">—（'+ct+'此年於資料源中無條目）</span>';
+  return '<div class="zuo-dep" data-dep="'+ct+'">'
+    + '<button class="zuo-deptoggle" type="button" aria-expanded="false" aria-controls="'+id+'">'
+    +   '<span class="caret">▸</span> 展開 ' + ct + ' · ' + esc(yearLabel(duke,num))
+    +   '<span class="dim">（預設不顯示，點此展開）</span>'
+    + '</button>'
+    + '<div class="zuo-depbody" id="'+id+'" hidden>'+body
+    +   '<div class="zuo-depnote dim">此為依附於左傳同年之並列文本，非逐句對應。</div>'
+    + '</div>'
+    + '</div>';
+}
+function renderZuo(){
+  zuoInit();
+  const st=document.getElementById("zuoStatus");
+  const body=document.getElementById("zuoBody");
+  const deps=document.getElementById("zuoDeps");
+  const foot=document.getElementById("zuoFoot");
+  if(!DATA||!DATA.chuan){
+    st.className="status info";
+    st.textContent="請先載入資料，再顯示左傳正文。";
+    body.innerHTML=""; deps.innerHTML=""; foot.textContent="";
+    return;
+  }
+  const duke=zuoDukeSel().value;
+  if(!zuoYearSel().options.length) zuoFillYears();
+  const num=parseInt(zuoYearSel().value,10);
+  if(isNaN(num)){ return; }
+  const y=zuoYearRec("左傳",duke,num);
+  const ys=zuoYearsOf(duke);
+  const idx=ys.indexOf(num);
+  document.getElementById("zuoPos").textContent="（"+duke+" 共 "+ys.length+" 年 · 本年為第 "+(idx+1)+"）";
+  st.className="status ok";
+  st.textContent="左傳正文已就緒。";
+  // 主體
+  let h='<div class="zuo-head"><span class="zuo-title">'+esc(yearLabel(duke,num))+'</span>'
+       +'<span class="pill">主線：左傳</span></div>';
+  if(y && (y.jing||y.zhuan)){
+    if(y.jing) h+='<div class="zuo-sec jing"><span class="zuo-tag">【經】</span><span class="jtext">'+esc(y.jing)+'</span></div>';
+    if(y.zhuan) h+='<div class="zuo-sec zhuan"><span class="zuo-tag">【傳】</span><span class="ztext">'+esc(y.zhuan)+'</span></div>';
+  } else {
+    h+='<div class="empty">左傳此年於資料源中無條目。</div>';
+  }
+  body.innerHTML=h;
+  // 依附：公羊、穀梁
+  deps.innerHTML='<div class="zuo-dephead">▷ 依附文本（點擊才顯示）</div>'
+    + zuoDependentBlock("公羊傳",duke,num)
+    + zuoDependentBlock("穀梁傳",duke,num);
+  Array.from(deps.querySelectorAll(".zuo-deptoggle")).forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const box=btn.parentElement.querySelector(".zuo-depbody");
+      const open=btn.getAttribute("aria-expanded")==="true";
+      btn.setAttribute("aria-expanded", String(!open));
+      box.hidden=open;
+      btn.querySelector(".caret").textContent = open? "▸":"▾";
+    });
+  });
+  foot.textContent="資料來源：殆知閣古籍庫（公有領域），簡→繁自動轉換；正式引用請核對校點本。";
+}
 /* ---------- 初始化 ---------- */
 initTheme();
-setTab("tab-data");
+setTab("tab-zuo");
 renderDataState();
 setProgress(0,"待載入資料");
 
@@ -1387,6 +1575,7 @@ setProgress(0,"待載入資料");
     status.textContent="資料已自動載入（"+ALL_ENTRIES.length+" 條"+(r.cached?"，已寫入快取":" (快取空間不足)")+"）。";
   }
   renderDataState();
+  renderZuo();   /* 資料就緒後填充左傳閱讀頁（首頁） */
 })();
 
 </script>
